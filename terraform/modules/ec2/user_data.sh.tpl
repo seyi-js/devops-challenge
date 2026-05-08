@@ -10,6 +10,10 @@ dnf install -y docker
 
 systemctl enable --now docker
 
+# ── SSM agent (pre-installed on AL2023, but ensure it is running) ─────────────
+dnf install -y amazon-ssm-agent
+systemctl enable --now amazon-ssm-agent
+
 # ── AWS CLI v2 ────────────────────────────────────────────────────────────────
 if ! command -v aws &>/dev/null; then
   curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscli.zip
