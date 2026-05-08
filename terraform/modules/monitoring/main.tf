@@ -88,11 +88,15 @@ resource "aws_cloudwatch_dashboard" "main" {
     widgets = [
       {
         type   = "metric"
-        x = 0; y = 0; width = 12; height = 6
+        x      = 0
+        y      = 0
+        width  = 12
+        height = 6
         properties = {
-          title  = "EC2 CPU Utilization"
-          period = 60
-          stat   = "Average"
+          title   = "EC2 CPU Utilization"
+          region  = var.aws_region
+          period  = 60
+          stat    = "Average"
           metrics = [
             ["AWS/EC2", "CPUUtilization", "InstanceId", var.ec2_instance_id]
           ]
@@ -100,11 +104,15 @@ resource "aws_cloudwatch_dashboard" "main" {
       },
       {
         type   = "metric"
-        x = 12; y = 0; width = 12; height = 6
+        x      = 12
+        y      = 0
+        width  = 12
+        height = 6
         properties = {
-          title  = "EC2 Memory Utilization (CWAgent)"
-          period = 60
-          stat   = "Average"
+          title   = "EC2 Memory Utilization (CWAgent)"
+          region  = var.aws_region
+          period  = 60
+          stat    = "Average"
           metrics = [
             ["CWAgent", "mem_used_percent", "InstanceId", var.ec2_instance_id]
           ]
@@ -112,11 +120,15 @@ resource "aws_cloudwatch_dashboard" "main" {
       },
       {
         type   = "metric"
-        x = 0; y = 6; width = 12; height = 6
+        x      = 0
+        y      = 6
+        width  = 12
+        height = 6
         properties = {
-          title  = "ALB Request Count"
-          period = 60
-          stat   = "Sum"
+          title   = "ALB Request Count"
+          region  = var.aws_region
+          period  = 60
+          stat    = "Sum"
           metrics = [
             ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", var.alb_arn_suffix]
           ]
@@ -124,11 +136,15 @@ resource "aws_cloudwatch_dashboard" "main" {
       },
       {
         type   = "metric"
-        x = 12; y = 6; width = 12; height = 6
+        x      = 12
+        y      = 6
+        width  = 12
+        height = 6
         properties = {
-          title  = "ALB 5xx Errors"
-          period = 60
-          stat   = "Sum"
+          title   = "ALB 5xx Errors"
+          region  = var.aws_region
+          period  = 60
+          stat    = "Sum"
           metrics = [
             ["AWS/ApplicationELB", "HTTPCode_ELB_5XX_Count", "LoadBalancer", var.alb_arn_suffix]
           ]
@@ -136,7 +152,10 @@ resource "aws_cloudwatch_dashboard" "main" {
       },
       {
         type   = "log"
-        x = 0; y = 12; width = 24; height = 6
+        x      = 0
+        y      = 12
+        width  = 24
+        height = 6
         properties = {
           title  = "Application Logs (last 20 lines)"
           region = var.aws_region

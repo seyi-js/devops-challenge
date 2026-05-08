@@ -26,9 +26,9 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region:            ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -37,9 +37,9 @@ jobs:
       - name: Build image
         id: meta
         env:
-          REGISTRY:  ${{ steps.login-ecr.outputs.registry }}
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPO_NAME: ${{ env.ECR_REPO_NAME }}
-          SHA:       ${{ github.sha }}
+          SHA: ${{ github.sha }}
         run: |
           IMAGE="${REGISTRY}/${REPO_NAME}:${SHA}"
           docker build --target production -t "${IMAGE}" app/
@@ -53,10 +53,10 @@ jobs:
 
       - name: Push to ECR (sha + latest tags)
         env:
-          REGISTRY:  ${{ steps.login-ecr.outputs.registry }}
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPO_NAME: ${{ env.ECR_REPO_NAME }}
-          SHA:       ${{ github.sha }}
-          IMAGE:     ${{ steps.meta.outputs.image }}
+          SHA: ${{ github.sha }}
+          IMAGE: ${{ steps.meta.outputs.image }}
         run: |
           docker push "${IMAGE}"
           docker tag  "${IMAGE}" "${REGISTRY}/${REPO_NAME}:latest"
@@ -74,15 +74,15 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region:            ${{ env.AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy via SSM Run Command
         env:
           INSTANCE_ID: ${{ secrets.EC2_INSTANCE_ID }}
-          IMAGE:       ${{ needs.build-and-push.outputs.image }}
-          AWS_REGION:  ${{ env.AWS_REGION }}
+          IMAGE: ${{ needs.build-and-push.outputs.image }}
+          AWS_REGION: ${{ env.AWS_REGION }}
         run: |
           # Extract ECR registry host from the image URI
           ECR_HOST=$(echo "$IMAGE" | cut -d'/' -f1)
@@ -133,7 +133,7 @@ jobs:
       - name: Verify application health
         env:
           INSTANCE_ID: ${{ secrets.EC2_INSTANCE_ID }}
-          AWS_REGION:  ${{ env.AWS_REGION }}
+          AWS_REGION: ${{ env.AWS_REGION }}
         run: |
           COMMAND_ID=$(aws ssm send-command \
             --region "$AWS_REGION" \

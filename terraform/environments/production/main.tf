@@ -9,11 +9,11 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "devops-challenge-tfstate"
-    key            = "production/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "devops-challenge-tfstate-lock"
-    encrypt        = true
+    bucket       = "devops-challenge-tfstate-1"
+    key          = "production/terraform.tfstate"
+    region       = "us-east-1"
+    use_lockfile = true
+    encrypt      = true
   }
 }
 
@@ -86,6 +86,4 @@ module "ec2" {
   app_port              = 3000
   log_group_name        = "/ec2/${local.name}"
   tags                  = local.common_tags
-
-  depends_on = [module.monitoring]
 }
