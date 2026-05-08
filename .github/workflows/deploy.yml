@@ -34,7 +34,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build image
+      - name: Build image (runs tests in builder stage)
         id: meta
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -42,14 +42,8 @@ jobs:
           SHA: ${{ github.sha }}
         run: |
           IMAGE="${REGISTRY}/${REPO_NAME}:${SHA}"
-          docker build --target production -t "${IMAGE}" app/
+          docker build -t "${IMAGE}" app/
           echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
-
-      - name: Run tests
-        env:
-          IMAGE: ${{ steps.meta.outputs.image }}
-        run: |
-          docker run --rm --entrypoint npm "${IMAGE}" test
 
       - name: Push to ECR (sha + latest tags)
         env:
