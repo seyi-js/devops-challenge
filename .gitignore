@@ -1,0 +1,16 @@
+# Environment
+.env
+
+# Terraform
+**/.terraform/
+**/.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfvars.backup
+override.tf
+override.tf.json
+
+# Node
+app/node_modules/
+app/coverage/
+app/*.log
