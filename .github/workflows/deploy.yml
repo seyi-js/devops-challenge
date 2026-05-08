@@ -76,6 +76,7 @@ jobs:
         env:
           INSTANCE_ID: ${{ secrets.EC2_INSTANCE_ID }}
           IMAGE: ${{ needs.build-and-push.outputs.image }}
+          SHA: ${{ github.sha }}
           AWS_REGION: ${{ env.AWS_REGION }}
         run: |
           # Extract ECR registry host from the image URI
@@ -85,7 +86,7 @@ jobs:
             --region "$AWS_REGION" \
             --instance-ids "$INSTANCE_ID" \
             --document-name "AWS-RunShellScript" \
-            --comment "Deploy ${IMAGE}" \
+            --comment "Deploy ${SHA:0:12}" \
             --parameters "commands=[
               \"aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_HOST\",
               \"docker pull $IMAGE\",
